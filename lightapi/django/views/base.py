@@ -41,7 +41,8 @@ class APIView( View ):
             return self.METHODNOTALLOWED()
         
         try:    
-            self.params = self.init_params( dict( getattr( request, request.method, {} ) ) )
+            self.params = self.init_params(dict(getattr(request, 'POST' if request.method in ('POST', 'PUT')
+                                                                                   else 'GET', {})))
         except AssertionError:
             return self.FORBIDDEN( )
             

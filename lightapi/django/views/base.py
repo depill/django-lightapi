@@ -40,9 +40,13 @@ class APIView( View ):
         if request.method.lower() not in self.get_methods():
             return self.METHODNOTALLOWED()
         
-        try:    
-            self.params = self.init_params(dict(getattr(request, 'POST' if request.method in ('POST', 'PUT')
-                                                                                   else 'GET', {})))
+        try:
+            if request.META['CONTENT_TYPE'].lower() == 'application/json':
+                self.params = json.loads(request.body)
+            else:
+                self.params = dict(getattr(request, 'POST' if request.method in ('POST', 'PUT')
+                                                                                   else 'GET', {}))
+                self.params = self.init_params(self.params)
         except AssertionError:
             return self.FORBIDDEN( )
             

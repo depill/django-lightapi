@@ -22,7 +22,11 @@ class APIView( View ):
 		return getattr(cls, 'methods', ('get',))
 
 	def dispatch( self, request, *args, **kwargs ):
-		self.params = getattr( request, request.method )
+		if request.type == 'application/json':
+			self.params = json.dumps(request.body)
+		else:
+			self.params = getattr( request, request.method )
+
 		if hasattr( self, 'required_params' ):
 			check, param = self.check_params( self.required_params )
 			if not check:
@@ -41,7 +45,7 @@ class APIView( View ):
 		
 	def get_values( self ):
 		values = self.get_param( 'values', None )
- 		return json.loads( values ) if values else None
+		return json.loads( values ) if values else None
 
 	def response( self, status, data ):
 		res = HttpResponse( json.dumps( data ), content_type='application/json' )

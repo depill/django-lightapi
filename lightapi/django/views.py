@@ -23,7 +23,7 @@ class APIView( View ):
 
 	def dispatch( self, request, *args, **kwargs ):
 		if request.type == 'application/json':
-			self.params = json.dumps(request.body)
+			self.params = json.loads(request.body)
 		else:
 			self.params = getattr( request, request.method )
 

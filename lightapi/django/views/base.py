@@ -41,7 +41,7 @@ class APIView( View ):
             return self.METHODNOTALLOWED()
         
         try:
-            if request.META['CONTENT_TYPE'].lower() == 'application/json':
+            if request.META.get('CONTENT_TYPE').lower() == 'application/json':
                 self.params = json.loads(request.body)
             else:
                 self.params = dict(getattr(request, 'POST' if request.method in ('POST', 'PUT')

@@ -22,7 +22,7 @@ class APIView( View ):
 		return getattr(cls, 'methods', ('get',))
 
 	def dispatch( self, request, *args, **kwargs ):
-		if request.META['CONTENT_TYPE'].lower() == 'application/json':
+		if request.META.get('CONTENT_TYPE') and request.META.get('CONTENT_TYPE').lower() == 'application/json':
 			self.params = json.loads(request.body)
 		else:
 			self.params = getattr( request, request.method )
